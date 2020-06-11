@@ -1,0 +1,57 @@
+* 3. Longest Substring Without Repeating Characters
+Given a string, find the length of the longest substring without repeating characters.
+
+Example 1:
+
+Input: "abcabcbb"
+Output: 3 
+Explanation: The answer is "abc", with the length of 3. 
+Example 2:
+
+Input: "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+Example 3:
+
+Input: "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3. 
+Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+* Solution:
+  DEADLINE: <2020-03-10 二>
+#+BEGIN_SRC C++
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        //1.we can use 2 dimensions of vector to achieve the goal.
+        //2.we can also us two vectors compare contesting for it.
+        //首先使用第二种方法,通过两个字符向量的竞争来实现，（有一个count只需要1个就行。复杂度NlogN）
+        //遍历方式可以用映射全部字符到数字上（这个需要ASCII码对应），或者每次遍历已有数组。
+        vector<char> vec;
+        //遍历string里面度每一个字符，核心原理：string里面的所有元素可以通过下标来遍历。
+        int count = 0;
+        int count_tmp = 0;
+        int i = 0;
+        while(i < s.size()){
+            //这里的循环有两个功效，一个是给遍历一个游标，另一个是可以跳转到前面某个值。
+            vector<char>::iterator iter;
+            iter = std::find(vec.begin(), vec.end(),s[i]);
+            if(iter == vec.end()){
+                vec.push_back(s[i]);
+                count_tmp++;
+                i++;
+            }else{
+                vec.clear(); //清空  
+                if(count_tmp > count){
+                    count = count_tmp;
+                }
+                
+                i = i - count_tmp + 1;
+                count_tmp = 0;
+            }
+        }
+        return count > count_tmp ? count : count_tmp;
+    }
+};  
+#+END_SRC

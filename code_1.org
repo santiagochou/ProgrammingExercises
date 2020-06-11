@@ -1,0 +1,90 @@
+* 题目：计算字符串最后一个单词的长度，单词以空格隔开。
+** newcoder huawei
+
+## 答案一：
+#+BEGIN_SRC C++
+#include <iostream>
+#include <string.h>
+using namespace std;
+// say something.
+unsigned int getLastWordLen(char * str){
+    unsigned int len = 0;
+    char* tmpPos = 0;
+    tmpPos = str;
+    while(*tmpPos != '\0'){
+        if(*tmpPos == ' '){
+            len = 0;
+        }
+        else{
+            len++;
+        }
+        tmpPos += 1;
+    }
+    return len;
+}
+
+int main(int argc, char** argv){
+  //unsigned int len = getLastWordLen(argv[1]);
+  string input;
+  cin >> input; //这里的cin的分割可以是空格，所以这里的input不能获取全部的输入。
+  cout << getLastWordLen((char*)input.c_str()) << endl;
+  //cout << "The length of the last word is : " << len << endl;
+  return 0;
+}
+#+END_SRC
+
+** 答案1修改：
+
+#+BEGIN_SRC C++
+#include <iostream>
+#include <string.h>
+using namespace std;
+// say something.
+unsigned int getLastWordLen(char * str){
+    unsigned int len = 0;
+    char* tmpPos = 0;
+    tmpPos = str;
+    while(*tmpPos != '\0'){
+        if(*tmpPos == ' '){
+            len = 0;
+        }
+        else{
+            len++;
+        }
+        tmpPos += 1;
+    }
+    return len;
+}
+int main(int argc, char** argv){
+  //unsigned int len = getLastWordLen(argv[1]);
+  string input;
+    string temp;
+    while(cin >> temp){
+        input = input + " " + temp;
+    }
+  cout << getLastWordLen((char*)input.c_str()) << endl;
+  //cout << "The length of the last word is : " << len << endl;
+  return 0;
+}
+#+END_SRC
+
+** 答案2:
+
+#+BEGIN_SRC C++
+/*使用动态数组来做，输入的字符串依次存入数组中，
+最后返回数组中最后一个元素（字符串）的长度*/
+#include<iostream>
+#include<string>
+#include<vector>
+ 
+using namespace std;
+int main(){
+    string input;
+    vector<string>arr;
+    while(cin>>input){
+        arr.push_back(input);
+    }
+    cout<<arr[arr.size()-1].length()<<endl;    
+    return 0;
+}
+#+END_SRC

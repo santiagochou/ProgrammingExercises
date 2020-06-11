@@ -1,0 +1,140 @@
+* 2. Add Two Numbers
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Example:
+
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+Explanation: 342 + 465 = 807.
+
+** 错解一：如果链表list足够长，该方法失效：
+#+BEGIN_SRC C++ :
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {} //(constructor in struct)
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        // there have two methods.
+        // 1. convert lists to nums and add them to get a sum, then convert sum to list.
+        // convert two lists to num.
+        unsigned long int num1 = 0;
+        unsigned long int num2 = 0;
+        unsigned long int sum = 0;
+        unsigned long int power = 1;
+        while(l1 != NULL){
+            num1 += l1->val * power;
+            l1 = l1->next;
+            power *= 10;
+        }
+        
+        power=1;
+        while(l2 != NULL){
+            num2 += l2->val * power;
+            l2 = l2->next;
+            power *= 10;
+        }
+        
+        // add two generated nums to sum.
+        sum = num1 + num2;
+        
+        // convert the sum to list.
+        //ListNode* head = (ListNode*)malloc(sizeof(ListNode));
+        ListNode *head = new ListNode(0);
+        head->val = 0;
+        ListNode* tmp = head;
+        if(sum == 0){
+            tmp->next= new ListNode(0);
+            tmp->next->val = 0;
+            tmp = tmp->next;
+        }else{
+            while(sum){
+            //tmp->next = (ListNode*)malloc(sizeof(ListNode));
+            tmp->next = new ListNode(0);
+            tmp->next->val = sum%10;
+            tmp = tmp->next;
+            sum /=10;
+            }
+        }
+        
+        tmp->next = NULL;//https://blog.csdn.net/lv1224/article/details/54675703
+        
+        return head->next;
+        
+        // 2.add the two lists directly and set a flag for carry digit(进位).
+        
+        
+    }
+};
+
+#+END_SRC
+
+*** Tips1:
+    单向链表关键是设置一个head；
+    这里的用malloc的方式创建节点和用new的方式创造的节点，后面这个head怎么删除，都需要后续仔细的思考。
+*** Tips2:
+    把数字变成反向的单数字链表 -> [[]]
+    链表图示 -> [[]]
+
+** 正确解： 对两个list的每一个数字进行操作，并考虑其进位：
+#+BEGIN_SRC C++ :
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {} //(constructor in struct)
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        // 2.add the two lists directly and set a flag for carry digit(进位).
+        ListNode* head = new ListNode(0);
+        head->next = NULL;
+        ListNode* tmp = head;
+        int flag = 0;
+        int num1 = 0;
+        int num2 = 0;
+        while(l1 != nullptr || l2 != nullptr){
+            if(l1 == nullptr){
+                num1 = 0;
+            }else{
+                num1=l1->val;
+                l1 = l1->next;
+            }
+            if(l2 == nullptr){
+                num2 = 0;
+            }else{
+                num2 = l2->val;
+                l2 = l2->next;
+            }
+            
+            tmp->next = new ListNode((num1 + num2 + flag)%10);
+            flag = (num1 + num2 + flag)/10;
+            tmp = tmp->next;
+        }
+        
+        if(flag){
+            tmp->next = new ListNode(1);
+            tmp = tmp->next;
+        }
+        
+        tmp->next = NULL;
+        
+        return head->next;
+        
+    }
+};
+
+#+END_SRC
+
+Summary:这里的存储空间站的有点大。
